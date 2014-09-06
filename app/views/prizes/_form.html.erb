@@ -1,0 +1,37 @@
+<%= form_for(@prize, html:{class:'new_user'}) do |f| %>
+  <% if @prize.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@prize.errors.count, "error") %> prohibited this prize from being saved:</h2>
+
+      <ul>
+      <% @prize.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_field :description, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= f.label :type %><br>
+    <%= f.text_field :type, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= f.label :amount %><br>
+    <%= f.text_field :amount, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= f.label :winner %><br>
+    <%= f.text_field :winner, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= f.label :status %><br>
+    <%= f.check_box :status, class: 'form-control' %>
+  </div>
+  <div class="actions">
+    <%= f.submit 'Submit', class:'btn btn-lg btn-primary btn-block btn1 btn4' %>
+  </div>
+<% end %>

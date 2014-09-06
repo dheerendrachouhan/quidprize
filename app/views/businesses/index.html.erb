@@ -1,0 +1,43 @@
+ <div class="container_main1">
+ <div class="table-responsive">
+<h1>Listing businesses</h1>
+
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Logo</th>
+      <th>User</th>
+      <th colspan="3">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @businesses.each do |business| %>
+      <tr>
+        <td><%= business.name %></td>
+        <td><%= 
+			    if business.logo.blank? == false
+			    image_tag business.logo, width:"25px", height:"25px"
+			    end
+			 %>
+        <td><%= 
+         if (business.user_id).blank? == false
+         @username = User.find(business.user_id) 
+         @username.first_name 
+         else
+         business.user_id
+         end
+         %></td>
+        <td><%= link_to 'Show', business %></td>
+        <td><%= link_to 'Edit', edit_business_path(business) %></td>
+        <td><%= link_to 'Destroy', business, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Business', new_business_path %>
+</div></div>

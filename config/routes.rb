@@ -1,4 +1,24 @@
 Rails.application.routes.draw do
+  root 'dashboard#index'
+  
+  resources :businesses
+
+  devise_for :users
+  
+  resources :tickets
+
+  resources :prizes
+
+  resources :raffles
+  
+  
+  
+  get '/dashboard' => 'dashboard#index'
+  
+  get '/:id' => 'ticketview#view'
+  get 't/:id' => 'ticketview#ticketno'
+  post 't/' => 'ticketview#genticket'
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

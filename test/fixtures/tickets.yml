@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  raffle: 1
+  owner: 1
+  hash: MyString
+  parent_ticket: 1
+
+two:
+  raffle: 1
+  owner: 1
+  hash: MyString
+  parent_ticket: 1

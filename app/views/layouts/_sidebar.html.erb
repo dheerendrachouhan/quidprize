@@ -1,0 +1,29 @@
+  <div class="menu">
+	  <div class="home_logo1">
+	  <a href=""><%= image_tag 'logo.png' %></a>
+	  </div>
+	  <div class="menu_bar">
+		
+		 <div class="menu_bar">  <ul>
+			   <li>
+			     <%= link_to ('<i class="fa fa-home"></i> Home').html_safe, dashboard_path %> 
+			  </li>
+			   <li>
+			   	 <%= link_to ('<i class="fa  fa-share-alt"></i> Raffles').html_safe, raffles_path %>
+			  </li>
+			   <li>
+			     <%= link_to ('<i class="fa fa-ticket"></i> Tickets').html_safe, tickets_path %>
+			  </li>
+			    <li>
+			     <%= link_to ('<i class="fa fa-users"></i> Business').html_safe, businesses_path %>
+			  </li>
+			   <li>
+			   	<%= link_to ('<i class="fa fa-usd"></i> Prize').html_safe, prizes_path %>
+			  </li>
+		  </ul>
+		  </div>
+	  </div>
+	  <div class="logout">
+	    <%= link_to ('<i class="fa fa-power-off"></i> Logout').html_safe, destroy_user_session_path,  method: :delete %>
+	  </div> 
+  </div>

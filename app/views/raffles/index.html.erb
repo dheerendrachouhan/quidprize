@@ -1,0 +1,55 @@
+ <div class="container_main1">
+ <div class="wrapper_1">
+ <h3 class="create_raffle">Create Raffle </h3>
+  <%= form_tag( new_raffle_path , method:'get', class:'new_user sign_1', style:'background:#f9f9f9;') do %>
+    
+      <input type="text" class="form-control" name="targeturl" placeholder="Target URL" required="" autofocus="" />
+      
+      <button class="btn btn-lg btn-primary btn-block btn1 btn2" type="submit">Create Raffle</button>   
+   
+    <% end %>
+  </div>
+  <div class="table-responsive">
+  	<h1>Listing raffles</h1>
+  <table class="table table-hover">
+    <thead>
+        <tr>
+            <th data-field="id" data-align="center" data-sortable="true">Business</th>
+            <th data-field="target url" data-align="center" data-sortable="true">Target URL</th>
+            <th data-field="target url" data-align="center" data-sortable="true">Root Ticket</th>
+            
+            <th data-field="expiry" data-align="center" data-sortable="true">Expiry Date</th>
+            <th data-field="crated" data-align="center" data-sortable="true">Date Created</th>
+           
+            <th colspan="3">Action</th>
+        </tr>
+         <% @raffles.each do |raffle| %>
+	      <tr>
+	        <td><%= if raffle.business_id.blank? == false 
+	        	 Business.find(raffle.business_id).name
+	        	 end
+	             %></td>
+	        <td><%= raffle.target_url %></td>
+	        <td><%= 
+	        @pticket = raffle.tickets.where(parent_ticket: 0).first
+	        if @pticket != nil
+	        "http://ow.ly/"+@pticket.hash_str
+	        end
+	         %></td>
+	        <td><%=  raffle.end_date.strftime("%d-%m-%Y") %></td>
+	        <td><%=  raffle.created_at.strftime("%d-%m-%Y") %></td>
+	        
+	        <td><%= link_to 'Show', '/'+@pticket.hash_str %></td>
+	        <td><%= link_to 'Edit', edit_raffle_path(raffle) %></td>
+	        <td><%= link_to 'Destroy', raffle, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+	      </tr>
+	    <% end %>
+        
+        
+    </thead>
+</table>
+<%= link_to 'New Raffle', new_raffle_path %>
+</div>
+
+
+

@@ -1,0 +1,40 @@
+
+<%= form_for(@business, html:{class:'new_user'}) do |f| %>
+  <% if @business.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@business.errors.count, "error") %> prohibited this business from being saved:</h2>
+
+      <ul>
+      <% @business.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name, class: 'form-control' %>
+  </div>
+  <div class="field">
+    <%= f.label :logo %><br>
+    <%= 
+    if @business.logo != nil
+    image_tag @business.logo, width:"100px", height:"100px"
+    end
+     %>
+    <%= f.file_field :logo, class: 'form-control' %>
+  </div>
+ 
+    <%= f.hidden_field :logo_name, value: @business.logo %>
+    <%= f.hidden_field :user_id, value:current_user.id %>
+    <%
+   # @user = current_user
+   #debug current_user
+   #puts 'current--'+ @user.id ;
+    %>
+  
+  <div class="actions">
+   <%= f.submit 'Submit', class:'btn btn-lg btn-primary btn-block btn1 btn4' %>
+  </div>
+<% end %>

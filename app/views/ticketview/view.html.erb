@@ -1,0 +1,414 @@
+<div class="menu_1">
+	<div class="example_logo" style="float:left">
+		<%= image_tag 'logo.png', width: '30px' %>
+	</div>
+  <div class="container_main">
+	
+	<div class="redirect">
+	   <span>Redirecting to</span>
+	   <span><%= link_to @raffle.target_url%></span>
+	   <span style="padding-left:30px" id="countdown_span"></span>
+	</div>
+	
+	<div class="skip">
+	  <%= link_to 'Click to skip', @raffle.target_url %>
+	</div>
+	<div class="win">
+	   <h1><a href="">$100 Win Gift Card From</a></h1>
+	</div>
+	<div class="image1">
+	   <%= 
+	   if @business.logo.blank? == false
+	   image_tag  @business.logo
+	   end
+	   %>
+	</div>
+	
+	
+  <div id="lower_part">	
+	<div class="win">
+	   <h4><a href="">Prize give a way in</a> <span id="days"></span> <span id="raffle_countdown_span"></span></h4>
+	</div>
+	
+	<div class="how_to_win">
+		<div class="win_1">
+		How to Win
+			<ol>
+				<li>
+				Enter your Email
+				</li>
+				<li>
+				Use your shortlink to spread this link around.</li>
+				<li>
+				Increase your chances of winning with each click you get</li>
+			</ol>
+		</div>
+	</div>
+	
+	<div class="terms">
+	<a href="terms.html">Terms & Conditions</a>
+	</div>
+	
+   <%= form_for('ticketview', id:'generate_ticket', html:{class:'form-signin form_1', style:"background:#ffffff;border:none;" }) do |f| %>
+	    <%= f.hidden_field 'parent_ticket_id', value:@ticket.id %>
+	    <%= f.hidden_field 'raffle_id', value:@ticket.raffle_id %>
+	    
+	    <%= f.text_field 'email', class:'form-control', placeholder: 'Enter Email Address', autofocus:'' %>
+	    
+	    <%= f.button 'Create Shortlink', class:'btn btn-lg btn-primary btn-block btn1', id:'shortlink', type:'button', style: 'margin-top:5%;' %> 
+	    
+	
+	<% end %>
+	</div>
+  </div>
+</div>
+
+<script>
+ 
+ var intervalvar = null ;
+ var startclock = 0 ;
+ $(document).ready(function()
+ {
+ 	 
+   $("#lower_part").click(
+ 	function(){
+ 		stoptime();
+ 	}
+    );
+    
+  defaultstart();
+  
+  
+  //Create link
+  $("#shortlink").click(
+  	function()
+  	{
+  		var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var email = $("#ticketview_email").val(); 
+        var parent_ticket_id = $("#parent_ticket_id").val(); 
+     if(re.test(email))
+     {
+     	 var postData = $('form').serialize();
+     	 alert(postData);
+     	  $("#id_response_div").modal();
+            document.getElementById("id_loading_div").style.display = 'block'; //show the spinny wheel
+     	  $.ajax({
+                url : "/t/",
+                type : "POST",
+                data : postData,
+                  dataType: "json",
+                
+                success : function(json) {
+                	alert("test--"+json.hash)
+                
+                
+                
+                 document.getElementById("id_loading_div").style.display = 'none'; //turn off the spinny wheel
+                        $('#id_response_message').html('');
+                        $('#id_response_message').append('<h1>Thanks for participating!</h1>');
+                        //display response message
+                        if (json.status=='new')
+                        {
+                            $('#id_response_message').append('Your new shortlink is:<br><br>');
+                        }
+                        else if (json.status=='existing')
+                        {
+                            $('#id_response_message').append('This email already has a shortlink:<br><br>');
+                        }
+                        $('#id_response_message').append('<a href="http://ow.ly/'+json.hash+'">http://ow.ly/'+json.hash+'</a>');
+                        if (json.status=='existing')
+                        {
+                            $('#id_response_message').append('<br><br>Please <a href="/">login</a> to view stats');
+                        }
+                        $('#id_response_message2').html('');
+                        $('#id_response_message2').append('Every click through via this link will add another free entry under the registered email address.<br> Spread the word to win the prize!');
+                        $('#id_response_terms').css('display','block');
+
+                        ////show the social buttons bar
+                        //copypaste button
+                        $('input#dynamic').val('http://ow.ly/'+json.hash);
+                        $('div#easylinkbar').css('display','block');
+                        $('a#copy-dynamic').zclip({
+                            path:'<%= '/images/ZeroClipboard.swf' %>',
+                            copy:function(){return $('input#dynamic').val();}
+                        });
+                        $('embed#ZeroClipboardMovie_1').attr('width','72');
+                        $('embed#ZeroClipboardMovie_1').attr('height','72');
+                        $('embed#ZeroClipboardMovie_1').attr('flashvars','id=1&width=72&height=72');
+                        $('embed#ZeroClipboardMovie_1').attr('style','"padding-top:none;padding-left:none;"');
+                        $('a#copy-dynamic').hover(function() {
+                                $('img#image-button').attr('src','<%= '/images/Editing-Copy-icon-active.png'%>');
+                            }, function() {
+                                $('img#image-button').attr('src','<%= '/images/Editing-Copy-icon.png'%>');
+                            }
+                        );
+                        //twitter button
+                        var th = 'https://twitter.com/share';
+                        th += '?url=http://ow.ly/'+json.hash;
+                        th += '&text=Help me win!';
+                        th += '&size=large';
+                        th += '&count=none';
+                        th += '&hashtags=quidprize';
+                        var eth = encodeURI(th);
+                        $('a#tw_link').attr('href',eth);
+                        $('a#tw_link').hover( function() {
+                                $('img#tw-button').attr('src','<%= '/images/twitter-icon-active.png'%>');
+                            }, function() {
+                                $('img#tw-button').attr('src','<%= '/images/twitter-icon.png'%>');
+                            }
+                        );$('a#tw_link').hover( function() {
+                                $('img#tw-button').attr('src','<%= '/images/twitter-icon-active.png'%>');
+                            }, function() {
+                                $('img#tw-button').attr('src','<%= '/images/twitter-icon.png'%>');
+                            }
+                        );
+                        //linkedin button
+                        var lh = 'http://www.linkedin.com/shareArticle';
+                        lh += '?url=http://ow.ly/'+json.hash;
+                        var elh = encodeURI(lh);
+                        $('a#li_link').attr('href',elh);
+                        $('a#li_link').hover( function() {
+                                $('img#li-button').attr('src','<%= '/images/linkedin-icon-active.png'%>');
+                            }, function() {
+                                $('img#li-button').attr('src','<%= '/images/linkedin-icon.png'%>');
+                            }
+                        );
+                        //pinterest button
+                        var ph = 'http://pinterest.com/pin/create/button/?url=';
+                        ph += 'http://ow.ly/'+json.hash;
+                        var eph = encodeURI(ph);
+                        $('a#pt_link').attr('href',eph);
+                        $('a#pt_link').hover( function() {
+                                $('img#pt-button').attr('src','<%= '/images/pinterest-icon-active.png'%>');
+                            }, function() {
+                                $('img#pt-button').attr('src','<%= '/images/pinterest-icon.png'%>');
+                            }
+                        );
+                        //facebook button
+                        var fh = 'https://www.facebook.com/sharer/sharer.php?'
+                        fh += 'u=http://ow.ly/'+json.hash;
+                        fh += '&title=quidprize';
+                        var efh = encodeURI(fh);
+                        $('a#fb_link').attr('href',efh);
+                        $('a#fb_link').hover( function() {
+                                $('img#fb-button').attr('src','<%= '/images/facebook-icon-active.png'%>');
+                            }, function() {
+                                $('img#fb-button').attr('src','<%= '/images/facebook-icon.png'%>');
+                            }
+                        );
+                
+                
+                },
+                error : function(xhr,errmsg,err) {
+                        alert(xhr.status + ": " + xhr.responseText);
+                        $('#id_response_div').html(xhr.status + ": " + xhr.responseText);
+                        $('#id_response_div').show();
+                    }
+                });    
+     	
+     }
+     else{
+     	
+     	alert("Invalid email address");
+     	
+     }
+  		
+  		
+  	}
+  	
+  );
+ }
+ );
+ 
+ 
+ 	
+ 	
+ 	var time_left = 10;
+ 	
+ 	var year = "<%=@raffle.end_date.strftime("%Y") %>"
+ 	var month = "<%=@raffle.end_date.strftime("%m") %>"
+ 	var date = "<%=@raffle.end_date.strftime("%d") %>"
+ 	
+    var raffle_date = new Date(year, month - 1, date );
+    raffle_time = raffle_date.getTime()
+    var now = new Date();
+    nowtime = now.getTime();
+    var time_difference = Math.floor((raffle_time - nowtime)/1000);
+    var ftime_difference = formatSeconds(time_difference);
+    var cinterval;
+    var cinterval2;
+    var timestatus=1;
+    
+    
+   
+    function time_dec()
+    {
+        time_left--;
+        document.getElementById('countdown_span').innerHTML = time_left;
+        if(time_left == 0)
+        {
+            clearInterval(cinterval);
+            completion();
+        }
+    }
+
+    function raffle_time_dec()
+    {
+        time_difference--;
+        var ftime_difference = formatSeconds(time_difference);
+        $('#raffle_countdown_span').html(ftime_difference);
+    }
+
+    function formatSeconds(secs)
+    {
+        var pad = function(n) {
+            return (n < 10 ? "0" + n : n);
+        };
+
+        var d = Math.floor(secs / 86400);
+        var h = Math.floor((secs / 86400) % 1 * 24);
+        var m = Math.floor((secs / 3600) % 1 * 60);  
+        // Remainder of an hour of seconds x 60
+        var s = Math.floor((secs / 60) % 1 * 60);  
+        // Remainder of a minute of seconds x 60
+
+        return pad(d) +" days "+ pad(h) +":"+ pad(m) +":"+ pad(s);
+    };
+
+    function resumetime()
+    {
+        clearInterval(cinterval);
+        cinterval = setInterval('time_dec()', 1000);
+    }
+
+    function defaultstart()
+    {
+        time_left = 10;
+        clearInterval(cinterval);
+        clearInterval(cinterval2);
+        cinterval = setInterval('time_dec()', 1000);
+        cinterval2 = setInterval('raffle_time_dec()', 1000);
+    }
+
+    function stopstarttime()
+    {
+        if(timestatus==1)
+        {
+            clearInterval(cinterval);
+            timestatus=0;
+        }
+        else
+        {
+            clearInterval(cinterval);
+            cinterval = setInterval('time_dec()', 1000);
+            timestatus=1;
+        }
+    }
+
+    function stoptime()
+    {
+        clearInterval(cinterval);
+        timestatus=0;
+    }
+    
+    function completion()
+    {
+        //Send something to the completion logger
+        window.location.assign('<%=@raffle.target_url %>');
+
+    }
+
+</script>
+
+
+
+
+
+
+
+
+    <center>
+        <div id="id_response_div" style="padding-top:20px; height: 92%; background-color: white;display:none;vertical-align:middle;">
+
+            <center>
+            <div id="id_loading_div" style="display: none; padding-top: 100px; ">
+                <img src="<%= '/images/1-0.gif' %>" />
+            </div>
+            <div id="id_response_message" class="id_response_message" >
+            </div>
+
+            <div id="id_response_url" class="id_response_url">
+            </div>
+
+            <div id="easylinkbar" class="easylinkbar" style="display: none;margin-bottom: 65px;">
+            
+<style>
+    .barlink {
+        display: inline;
+    }
+
+    .barlink:hover {
+        display: inline;
+    }
+
+    .barimg {
+        display: inline;
+        border-bottom: 2px solid white;
+    }
+
+</style>
+
+<div class="barlink">
+<input id="dynamic" type="hidden" value="">
+<a id="copy-dynamic" >
+        <img class="barimg" id="image-button" src="<%= "/images/Editing-Copy-icon.png" %>" style="height: 50px;top: 40px;position:relative;padding-right:15px;">
+</a>
+</div>
+
+
+<div class="barlink">
+<a id="tw_link" href="#" >
+    <img class="barimg" id="tw-button" src="<%= "/images/twitter-icon.png" %>" style="height: 50px;top: 40px;position:relative;">
+</a>
+</div>
+
+<div class="barlink">
+<a id="fb_link" href="#" >
+    <img class="barimg" id="fb-button" src="<%= "/images/facebook-icon.png" %>" style="height: 50px;top: 40px;position:relative;">
+</a>
+</div>
+
+<div class="barlink">
+<a id="pt_link" href="#" >
+    <img class="barimg" id="pt-button" src="<%= "/images/pinterest-icon.png" %>" style="height: 50px;top: 40px;position:relative;">
+</a>
+</div>
+
+
+<div class="barlink">
+<a id="li_link" href="#" >
+    <img class="barimg" id="li-button" src="<%= "/images/linkedin-icon.png" %>" style="height: 50px;top: 40px;position:relative;">
+</a>
+</div>
+
+
+            </div>
+
+            <div id="id_response_message2" class="id_response_message2" style="width: 60%; display: block;">
+            </div>
+
+            <!--<div id="id_response_terms" class="id_response_terms" style="display: block; font-size: small;display:none;bottom: 8px; position: absolute; padding-left: auto; padding-right: auto; width:92%; ">-->
+                                <!--<a href="/legal/" target="_blank">Terms and Conditions</a>-->
+            </div>
+            </center>
+        </div>
+    </center>
+
+
+
+
+
+
+
+
+

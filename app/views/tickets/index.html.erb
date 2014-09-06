@@ -1,0 +1,35 @@
+<div class="container_main1">
+   <div class="table-responsive">
+<h1>Listing tickets</h1>
+
+<table  class="table table-hover">
+  <thead>
+    <tr>
+      <th>Raffle</th>
+      <th>Owner</th>
+      <th>Hash</th>
+      <th>Parent ticket</th>
+      <th colspan="3">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @tickets.each do |ticket| %>
+      <tr>
+        <td><%= ticket.raffle.id %></td>
+        <td><%= ticket.user.first_name+" "+ticket.user.last_name %></td>
+        <td><%= ticket.hash_str %></td>
+        <td><%= ticket.parent_ticket %></td>
+        <td><%= link_to 'Show', ticket %></td>
+        <!--<td><%= link_to 'Edit', edit_ticket_path(ticket) %></td>-->
+        <td><%= link_to 'Destroy', ticket, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<!--<%= link_to 'New Ticket', new_ticket_path %>-->
+ </div>
+</div>

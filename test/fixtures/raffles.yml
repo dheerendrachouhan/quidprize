@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  business_id: 
+  target_url: 
+  end_date: 
+  prize_id: 
+  status: false
+
+two:
+  business_id: 
+  target_url: 
+  end_date: 
+  prize_id: 
+  status: false
