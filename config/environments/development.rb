@@ -35,6 +35,7 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
   
-  
+  config.ow_ly_key = '4bCVE5QxL1FBsCva33dMI'
+
 
 end

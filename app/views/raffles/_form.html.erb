@@ -19,7 +19,7 @@
   <div class="field">
    
    <span>Business : </span> 
-  <span>  <%= f.collection_select :business_id, Business.order(:name),:id,:name, :prompt => '--Please Select--',:selected => @raffle.business_id, :class =>'form-control', :style => 'width:200px', :include_blank => true %>
+  <span>  <%= f.collection_select :business_id, Business.where(user_id: current_user.id).order(:name),:id,:name, :prompt => '--Please Select--',:selected => @raffle.business_id, :class =>'form-control', :style => 'width:200px', :include_blank => true %>
   </span></div>
   <div class="field">
   	

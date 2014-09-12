@@ -1,10 +1,14 @@
 class TicketsController < ApplicationController
   before_action :set_ticket, only: [:show, :edit, :update, :destroy]
-
+  require 'net/http'
+  helper_method :get_counts
   # GET /tickets
   # GET /tickets.json
   def index
-    @tickets = Ticket.all
+    #@tickets = Ticket.includes(:user, :raffle =>[:business]).where(:owner => current_user.id, :business.user_id => current_user.id)
+  
+   @tickets = Ticket.joins(:raffle, :business).where(" tickets.owner=#{current_user.id} or businesses.user_id=#{current_user.id} ")
+  
   end
 
   # GET /tickets/1
@@ -63,6 +67,32 @@ class TicketsController < ApplicationController
     end
   end
 
+   
+    def get_counts(hash)
+      
+    
+       @API_KEY = Rails.application.config.ow_ly_key
+      # puts 'key--'+@API_KEY
+       api_url = "http://ow.ly/api/1.1/url/clickStats?apiKey=#{@API_KEY}&shortUrl=http://ow.ly/#{hash}"
+    
+       result = Net::HTTP.get(URI.parse(api_url))
+        
+       # puts 'result data--'+result
+        
+       infostr = ActiveSupport::JSON.decode(result)
+      
+       @click_count = 0
+       
+         if infostr["results"].empty? == false 
+           infostr["results"].each do |key| 
+              @click_count += key['clickCount'].to_i 
+            end
+         end
+    
+    return @click_count
+      
+    end
+    
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_ticket
@@ -74,29 +104,6 @@ class TicketsController < ApplicationController
       params.require(:ticket).permit(:raffle_id, :owner, :hash, :parent_ticket)
     end
     
-    def call_owly_service(url)
-      require 'net/http'
-      require 'pp'
-      
-       api_url = "http://ow.ly/api/1.1/url/shorten?apiKey=#{API_KEY}&shortUrl=#{url}"
-      
-     #   puts "checkurl--"+api_url
-        
-       result = Net::HTTP.get(URI.parse(api_url))
-        
-        
-        
-       hashstr = ActiveSupport::JSON.decode(result)
-      @hash = ""
-       hashstr["results"].each do |key, val|
-         
-         if key == 'hash'
-           @hash = val
-         end
-         
-       end
-     #  puts "inloop--"+@hash
-       return @hash
-       # p hashstr[:results]
-    end
+    
+ 
 end

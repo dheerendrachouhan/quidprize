@@ -1,0 +1,11 @@
+# ow.ly key configuration.
+ 
+ 
+development:
+ow_ly_key: 4bCVE5QxL1FBsCva33dMI
+ 
+production:
+ow_ly_key: 4bCVE5QxL1FBsCva33dMI
+ 
+test:
+ow_ly_key: 4bCVE5QxL1FBsCva33dMI

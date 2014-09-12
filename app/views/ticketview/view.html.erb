@@ -18,10 +18,11 @@
 	</div>
 	<div class="image1">
 	   <%= 
-	   if @business.logo.blank? == false
+	   if @business.nil? == false && @business.logo.blank? == false
 	   image_tag  @business.logo
 	   end
 	   %>
+	  
 	</div>
 	
 	
@@ -89,7 +90,7 @@
      if(re.test(email))
      {
      	 var postData = $('form').serialize();
-     	 alert(postData);
+     	// alert(postData);
      	  $("#id_response_div").modal();
             document.getElementById("id_loading_div").style.display = 'block'; //show the spinny wheel
      	  $.ajax({
@@ -99,7 +100,7 @@
                   dataType: "json",
                 
                 success : function(json) {
-                	alert("test--"+json.hash)
+                	
                 
                 
                 
@@ -200,7 +201,7 @@
                 
                 },
                 error : function(xhr,errmsg,err) {
-                        alert(xhr.status + ": " + xhr.responseText);
+                        //alert(xhr.status + ": " + xhr.responseText);
                         $('#id_response_div').html(xhr.status + ": " + xhr.responseText);
                         $('#id_response_div').show();
                     }

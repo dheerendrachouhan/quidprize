@@ -1,7 +1,9 @@
 class TicketviewController < ApplicationController
  
   def ticketno
-   render :text => "test"
+     @ticket = Ticket.find(params[:id])
+    redirect_to '/'+@ticket.hash_str
+   #render :text => "test"
   end
   def view
    
@@ -11,7 +13,7 @@ class TicketviewController < ApplicationController
     
     @ticket = Ticket.where(:hash_str => @hash_val ).first
     if @ticket != nil
-    #puts "id val--"+@ticket.owner
+  #  puts "id val--"+@ticket.owner.to_s
     @raffle = Raffle.find(@ticket.raffle_id)
     @business = @raffle.business
     else
@@ -100,7 +102,7 @@ class TicketviewController < ApplicationController
       # code
       require 'net/http'
      
-       @API_KEY = "4bCVE5QxL1FBsCva33dMI" #Rails.application.config.ow_ly_key
+       @API_KEY = Rails.application.config.ow_ly_key
        api_url = "http://ow.ly/api/1.1/url/shorten?apiKey=#{@API_KEY}&longUrl=#{url}"
       
       puts 'api_url--'+api_url

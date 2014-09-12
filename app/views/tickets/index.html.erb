@@ -5,10 +5,12 @@
 <table  class="table table-hover">
   <thead>
     <tr>
+      <th>Id</th>
       <th>Raffle</th>
       <th>Owner</th>
       <th>Hash</th>
       <th>Parent ticket</th>
+      <th>Total clicks</th>
       <th colspan="3">Action</th>
     </tr>
   </thead>
@@ -16,10 +18,12 @@
   <tbody>
     <% @tickets.each do |ticket| %>
       <tr>
-        <td><%= ticket.raffle.id %></td>
+      	<td><%= ticket.id %></td>
+        <td><%= ticket.raffle_id %></td>
         <td><%= ticket.user.first_name+" "+ticket.user.last_name %></td>
         <td><%= ticket.hash_str %></td>
         <td><%= ticket.parent_ticket %></td>
+        <td><%= get_counts(ticket.hash_str) %></td>
         <td><%= link_to 'Show', ticket %></td>
         <!--<td><%= link_to 'Edit', edit_ticket_path(ticket) %></td>-->
         <td><%= link_to 'Destroy', ticket, method: :delete, data: { confirm: 'Are you sure?' } %></td>

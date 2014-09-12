@@ -4,7 +4,7 @@ class BusinessesController < ApplicationController
   # GET /businesses
   # GET /businesses.json
   def index
-    @businesses = Business.all
+    @businesses = Business.where(user_id: current_user.id)
     
   
   end
@@ -107,7 +107,11 @@ class BusinessesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_business
-      @business = Business.find(params[:id])
+      @business = Business.find_by(id: params[:id], user_id: current_user.id)
+      
+      if @business.nil? == true
+        redirect_to businesses_url
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

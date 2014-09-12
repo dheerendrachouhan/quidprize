@@ -5,7 +5,7 @@ class RafflesController < ApplicationController
   # GET /raffles
   # GET /raffles.json
   def index
-    @raffles = Raffle.all
+    @raffles = Raffle.includes(:business).where({:businesses => {:user_id => current_user.id}})
   end
 
   # GET /raffles/1
@@ -32,11 +32,11 @@ class RafflesController < ApplicationController
     mydate = ((raffle_params[:end_date]).to_s).to_date
   # dates = mydate
    
-   @hashval =  call_owly_service(raffle_params[:target_url])
-   puts "checkdate--"+ raffle_params[:end_date]
+   
    @raffle = Raffle.new(raffle_params)
     
-    
+    @hashval =  call_owly_service(raffle_params[:target_url])
+  
     respond_to do |format|
       if @raffle.save
         
@@ -100,18 +100,20 @@ class RafflesController < ApplicationController
     
     def call_owly_service(url)
       require 'net/http'
-      require 'pp'
-     # puts 'config-test'+ Rails.application.config.ow_ly_key
-     @API_KEY = '4bCVE5QxL1FBsCva33dMI' #Rails.application.config.ow_ly_key
+     
+     @API_KEY = Rails.application.config.ow_ly_key
      api_url = "http://ow.ly/api/1.1/url/shorten?apiKey=#{@API_KEY}&longUrl=#{url}"
     
-     puts "checkurl--"+api_url
+     
       
      result = Net::HTTP.get(URI.parse(api_url))
       
       
      hashstr = ActiveSupport::JSON.decode(result)
     @hash = ""
+    
+    puts "hasstr--"+hashstr.inspect
+    if hashstr["error"].nil? == true
      hashstr["results"].each do |key, val|
        
        if key == 'hash'
@@ -119,6 +121,10 @@ class RafflesController < ApplicationController
        end
        
      end
+    else
+       
+    end 
+     
    #  puts "inloop--"+@hash
      return @hash
      # p hashstr[:results]
